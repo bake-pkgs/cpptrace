@@ -4,13 +4,12 @@
 with symbol demangling, and "from_current_exception"-style exception traces.
 v1.0.4.
 
-Backend wiring mirrors kotatsu's CMake: unix resolves symbols via libdwarf
-(the exact libdwarf-lite rev cpptrace v1.0.4 pins — 5dfb2cd = v2.1.0 —
-compiled into this same archive with a hand-maintained `config/config.h`,
-zlib + zstd for compressed debug sections from bake-pkgs), unwinds via
-`_Unwind`, demangles via cxxabi. Windows uses dbghelp (StackWalk64 +
-UnDecorateSymbolName) and pulls none of the unix stack — the libdwarf/zstd/
-zlib dependencies are target-scoped to unix triples.
+Backend wiring mirrors kotatsu's CMake: unix resolves symbols via libdwarf —
+its own bake-pkgs package (`bake-pkgs/libdwarf`, the libdwarf-lite fork
+cpptrace v1.0.4 pins, with zlib + zstd for compressed debug sections) —
+unwinds via `_Unwind`, demangles via cxxabi. Windows uses dbghelp
+(StackWalk64 + UnDecorateSymbolName) and pulls none of the unix stack: the
+libdwarf dependency is target-scoped to unix triples.
 
 ## Verification
 

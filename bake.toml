@@ -9,31 +9,26 @@ cxx = "c++17"
 [dependencies]
 upstream = { url = "https://github.com/jeremy-rifkin/cpptrace/archive/refs/tags/v1.0.4.tar.gz" }
 
-# Symbol resolution backends, matching kotatsu's CMake wiring:
-# unix = libdwarf (vendored libdwarf-lite at the exact rev cpptrace v1.0.4
-# pins: 5dfb2cd = v2.1.0) + zstd + zlib for compressed debug sections;
-# windows = dbghelp (no extra deps). Target-scoped so windows never fetches
-# the unix stack.
+# Symbol resolution backends, matching kotatsu's CMake: unix = libdwarf
+# (bake-pkgs/libdwarf — the libdwarf-lite fork cpptrace v1.0.4 pins, with
+# zstd + zlib for compressed debug sections), unwind via _Unwind, demangle
+# via cxxabi; windows = dbghelp (StackWalk64 + UnDecorateSymbolName) and
+# pulls none of the unix stack — the libdwarf dependency is target-scoped
+# so windows never fetches it.
 [target."*-apple-darwin".dependencies]
-libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
-zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
-zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
+libdwarf = { url = "https://github.com/bake-pkgs/libdwarf", tag = "v2.1.0" }
 
 [target."*-apple-darwin"]
 defines = ["CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI", "CPPTRACE_HAS_MACH_VM"]
 
 [target."*-linux-musl".dependencies]
-libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
-zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
-zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
+libdwarf = { url = "https://github.com/bake-pkgs/libdwarf", tag = "v2.1.0" }
 
 [target."*-linux-musl"]
 defines = ["_GNU_SOURCE", "CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI"]
 
 [target."*-linux-gnu".dependencies]
-libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
-zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
-zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
+libdwarf = { url = "https://github.com/bake-pkgs/libdwarf", tag = "v2.1.0" }
 
 [target."*-linux-gnu"]
 defines = ["_GNU_SOURCE", "CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI", "CPPTRACE_HAS_DLADDR1"]
