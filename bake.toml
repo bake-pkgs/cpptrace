@@ -28,7 +28,7 @@ zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
 zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
 
 [target."*-linux-musl"]
-defines = ["CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI"]
+defines = ["_GNU_SOURCE", "CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI"]
 
 [target."*-linux-gnu".dependencies]
 libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
@@ -36,7 +36,7 @@ zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
 zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
 
 [target."*-linux-gnu"]
-defines = ["CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI", "CPPTRACE_HAS_DLADDR1"]
+defines = ["_GNU_SOURCE", "CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI", "CPPTRACE_HAS_DLADDR1"]
 libraries = ["dl"]
 
 [target."*-windows-gnu"]
