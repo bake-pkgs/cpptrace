@@ -40,5 +40,8 @@ defines = ["_GNU_SOURCE", "CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_
 libraries = ["dl"]
 
 [target."*-windows-gnu"]
+# Static linkage: without CPPTRACE_STATIC_DEFINE the headers decorate the
+# API with __declspec(dllimport) and the static archive's symbols can't link.
+public_defines = ["CPPTRACE_STATIC_DEFINE"]
 defines = ["CPPTRACE_GET_SYMBOLS_WITH_DBGHELP", "CPPTRACE_UNWIND_WITH_DBGHELP", "CPPTRACE_DEMANGLE_WITH_WINAPI", "CPPTRACE_HAS_STACKWALK"]
 libraries = ["dbghelp"]
