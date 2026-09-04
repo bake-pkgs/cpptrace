@@ -1,0 +1,44 @@
+[package]
+name = "cpptrace"
+version = "1.0.4"
+type = "lib"
+
+[language]
+cxx = "c++17"
+
+[dependencies]
+upstream = { url = "https://github.com/jeremy-rifkin/cpptrace/archive/refs/tags/v1.0.4.tar.gz" }
+
+# Symbol resolution backends, matching kotatsu's CMake wiring:
+# unix = libdwarf (vendored libdwarf-lite at the exact rev cpptrace v1.0.4
+# pins: 5dfb2cd = v2.1.0) + zstd + zlib for compressed debug sections;
+# windows = dbghelp (no extra deps). Target-scoped so windows never fetches
+# the unix stack.
+[target."*-apple-darwin".dependencies]
+libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
+zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
+zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
+
+[target."*-apple-darwin"]
+defines = ["CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI", "CPPTRACE_HAS_MACH_VM"]
+
+[target."*-linux-musl".dependencies]
+libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
+zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
+zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
+
+[target."*-linux-musl"]
+defines = ["CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI"]
+
+[target."*-linux-gnu".dependencies]
+libdwarf = { url = "https://github.com/jeremy-rifkin/libdwarf-lite/archive/5dfb2cd2aacf2bf473e5bfea79e41289f88b3a5f.tar.gz" }
+zstd = { url = "https://github.com/bake-pkgs/zstd", tag = "v1.5.7-r1" }
+zlib = { url = "https://github.com/bake-pkgs/zlib", tag = "v1.3.1" }
+
+[target."*-linux-gnu"]
+defines = ["CPPTRACE_USE_NESTED_LIBDWARF_HEADER_PATH", "CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF", "CPPTRACE_UNWIND_WITH_UNWIND", "CPPTRACE_DEMANGLE_WITH_CXXABI", "CPPTRACE_HAS_DLADDR1"]
+libraries = ["dl"]
+
+[target."*-windows-gnu"]
+defines = ["CPPTRACE_GET_SYMBOLS_WITH_DBGHELP", "CPPTRACE_UNWIND_WITH_DBGHELP", "CPPTRACE_DEMANGLE_WITH_WINAPI", "CPPTRACE_HAS_STACKWALK"]
+libraries = ["dbghelp"]
